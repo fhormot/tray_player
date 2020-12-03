@@ -6,7 +6,7 @@ class TrayIcon extends Tray {
   constructor(iconPath, mainWindow) {
     super(nativeImage.createEmpty());
 
-    this.setImage(nativeImage.createFromPath(iconPath))
+    this.setImage(nativeImage.createFromPath(iconPath));
     this.mainWindow = mainWindow;
 
     this.setToolTip('TrayPlayer');

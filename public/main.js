@@ -3,9 +3,14 @@ import path from 'path';
 import url from 'url';
 import 'babel-polyfill';
 
-import TrayIcon from './tray';
+const log = require('electron-log');
+log.transports.file.file = path.join(__dirname, '../.electron-log.txt');
+log.transports.file.getFile().clear();
 
-const { app, ipcMain, BrowserWindow, Tray } = electron;
+import TrayIcon from './tray';
+import { variables } from 'electron-log';
+
+const { app, ipcMain, BrowserWindow } = electron;
 
 let mainWindow;
 let tray;
@@ -24,7 +29,10 @@ const createWindow = () => {
     frame: false,
     show: false
   });
-
+  
+  const iconName = process.platform === 'win32' ? 'windows-icon.png' : 'iconTemplate.png';
+  const iconPath = path.join(__dirname, '../src/assets', iconName);
+  tray = new TrayIcon(iconPath, mainWindow);
   
   mainWindow.loadURL(url.format({
     pathname: path.join(__dirname, 'index.html'),
@@ -35,12 +43,6 @@ const createWindow = () => {
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
-
-  const iconName = process.platform === 'win32' ? 'windows-icon@2x.png' : 'iconTemplate.png';
-  const iconPath = path.join(__dirname, `./src/assets/${iconName}`);
-
-  // tray = new Tray(iconPath);
-  tray = new TrayIcon(iconPath, mainWindow);
 };
 
 app.on('ready', createWindow);
