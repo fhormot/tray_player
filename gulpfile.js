@@ -18,7 +18,7 @@ gulp.task('css', () => {
 });
 
 gulp.task('js', () => {
-    return gulp.src(['main.js', 'src/**/*.js'])
+    return gulp.src(['public/*.js', 'src/**/*.js'])
          .pipe(babel())
          .pipe(gulp.dest('app/'))
          .pipe(livereload());
