@@ -24,18 +24,28 @@ class MyContext extends Component {
       playback_metadata: {},
       search_query: "plastic love",
       search_results: [],
-      playlist: []
+      playlist: [],
+      play_from_playlist: true, 
+      play_next: {}
     };
 
     this.playbackToggle.bind(this);
     this.playbackRepeatToggle.bind(this);
     this.playbackMuteToggle.bind(this);
-    this.playbackVolume.bind(this);
     this.contextSet.bind(this);
     this.queryGetResults.bind(this);
     this.playNext.bind(this);
     this.playlistAppend(this);
     this.playlistRemove(this);
+  }
+
+  componentDidMount() {
+    this.setState({
+      playback_volume: JSON.parse(localStorage.getItem('playback_volume')) || 100,
+      playback_repeat: JSON.parse(localStorage.getItem('playback_repeat')) || this.state.playback_repeat,
+      playback_mute: JSON.parse(localStorage.getItem('playback_mute')) || this.state.playback_mute,
+      playlist: JSON.parse(localStorage.getItem('playlist')) || [],
+    });
   }
 
   playbackToggle = () => {
@@ -56,15 +66,12 @@ class MyContext extends Component {
     });
   }
 
-  playbackVolume = (e) => {
-    this.setState({
-      playback_volume: e.target.value
-    });
-  }
-
   contextSet = (event) => {
     this.setState({
       [event.name]: event.value
+    }, () => {
+      localStorage.setItem(event.name, JSON.stringify(event.value));
+      // console.log(JSON.parse(localStorage.getItem(event.name)));
     });
   }
 
@@ -103,6 +110,10 @@ class MyContext extends Component {
   playlistAppend = (item) => {
     this.setState({
       playlist: [...this.state.playlist, item]
+    }, () => {
+      localStorage.setItem('playlist', JSON.stringify(this.state.playlist));
+      // console.log(JSON.parse(localStorage.getItem('playlist')));
+      // console.log(this.state.playlist);
     });
   }
 
@@ -119,7 +130,6 @@ class MyContext extends Component {
         value={{
           ...this.state,
           playbackToggle: this.playbackToggle,
-          playbackVolume: this.playbackVolume,
           contextSet: this.contextSet,
           queryGetResults: this.queryGetResults,
           playbackRepeatToggle: this.playbackRepeatToggle,

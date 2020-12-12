@@ -18,7 +18,7 @@ const Playback = (player_ref) => {
                         playback_mute,
                         playbackToggle, 
                         playbackRepeatToggle, 
-                        playbackVolume, 
+                        contextSet, 
                         playbackMuteToggle,
                         playback_metadata
                     } = value;
@@ -108,7 +108,7 @@ const Playback = (player_ref) => {
                                                 <input type="range" min="0" max="100" 
                                                     value={playback_volume}                                        
                                                     name="playback_volume"
-                                                    onChange={(e) => playbackVolume(e)}
+                                                    onChange={(e) => contextSet(e.target)}
                                                 />
                                             </p>
                                         </div>

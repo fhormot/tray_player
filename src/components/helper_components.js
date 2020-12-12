@@ -76,30 +76,19 @@ export function videoCard(info, playlistAdd, onPlayClick, onAddClick) {
 
                             </div>
                         </div>
-
-                        {
-                            (playlistAdd) ? 
-                                <div className="card-action">
-                                    <a href="#"
-                                        onClick={
-                                            (e) => {
-                                                e.preventDefault();
-                                                onAddClick();
-                                                // console.log("hello");
-                                        }
-                                    }>Add to playlist</a>
-                                </div> : 
-                            <div className="card-action">
+                        
+                        <div className="card-action">
                             <a href="#"
                                 onClick={
                                     (e) => {
                                         e.preventDefault();
                                         onAddClick();
-                                        // console.log("hello");
                                 }
-                            }>Remove</a>
-                            </div>
-                        }
+                            }>
+                                {(playlistAdd) ? "Add to playlist" : "Remove"}
+                            </a>
+                        </div>
+                        
                     </div>
                 </div>
             </div>

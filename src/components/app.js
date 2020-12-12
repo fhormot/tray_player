@@ -55,13 +55,14 @@ class App extends React.Component {
                     width="1%"
                     height="1%"
                     className="hide"
+                    loop={contextStore.playback_repeat}
                     url={contextStore.playback_url}
                     playing={contextStore.playback_playing}
                     volume={contextStore.playback_volume/100}
                     muted={contextStore.playback_mute}
                     onDuration={(duration) => contextStore.contextSet({name: "playback_duration", value: duration})}
                     onProgress={(duration) => contextStore.contextSet({name: "playback_progress", value: duration})}
-                    // onReady={() => this.context.contextSet()}
+                    // onEnded={() => contextStore.playNext(contextStore.play_next)}
                 />
             </Fragment>
         );

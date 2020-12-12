@@ -17,34 +17,33 @@ const Search = () => {
                     } = value;
 
                     return (
-                        <div className="section">
-                            <div className="container">
-                                <div className="row">
-                                    <div className="col s12">
-                                        <div className="row" style={{display: "flex"}}>
-                                            <div className="input-field col s8">
-                                                <input 
-                                                    placeholder="Search" 
-                                                    type="text" 
-                                                    className="validate" 
-                                                    onChange={(e) => contextSet({name: "search_query", value: e.target.value})}
+                        <Fragment>
+                            <div className="row">
+                                <div className="col s12">
+                                    <div className="row" style={{display: "flex"}}>
+                                        <div className="input-field col s8">
+                                            <input 
+                                                placeholder="Search" 
+                                                type="text" 
+                                                className="validate" 
+                                                onChange={(e) => contextSet({name: "search_query", value: e.target.value})}
                                                 />
-                                            </div>
-                                            <div className="col s4 center-align" style={{alignSelf: "center"}}>
-                                                {buttonHelper({
-                                                    icon: "search",
-                                                    size: "small",
-                                                    onClick: queryGetResults
-                                                })}
-                                            </div>
+                                        </div>
+                                        <div className="col s4 center-align" style={{alignSelf: "center"}}>
+                                            {buttonHelper({
+                                                icon: "search",
+                                                size: "small",
+                                                onClick: queryGetResults
+                                            })}
                                         </div>
                                     </div>
+
+
                                 </div>
-
-                                {search_results.map(item => videoCard(item, true, () => playNext(item.url),  () => playlistAppend(item)))}
-
                             </div>
-                        </div>
+                            
+                            {search_results.map(item => videoCard(item, true, () => playNext(item.url),  () => playlistAppend(item)))}
+                        </Fragment>
                     );
                 }
             }
