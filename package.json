@@ -39,8 +39,11 @@
     "electron-log": "^4.3.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-player": "^2.7.0",
     "react-router": "^5.2.0",
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "^5.2.0",
+    "youtube-dl": "^3.0.2",
+    "yt-search": "^2.5.1"
   },
   "build": {
     "appId": "com.karmadust.electrate",
