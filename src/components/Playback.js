@@ -13,17 +13,24 @@ const Playback = (player_ref) => {
                         playback_playing,
                         playback_repeat,
                         playback_volume,
+                        playback_volume_dB,
                         playback_duration,
                         playback_progress,
                         playback_mute,
                         playbackToggle, 
                         playbackRepeatToggle, 
-                        contextSet, 
                         playbackMuteToggle,
-                        playback_metadata
+                        playback_metadata,
+                        playNext,
+                        playbackBack,
+                        volumeAdjust,
+                        settings_logarithmic_volume
                     } = value;
-
-                    // console.log(player_ref);
+                    
+                    const callPlayback = () => {
+                        playbackBack(player_ref);
+                    }
+                    
                     return (
                         <Fragment>
                             <div className="divider" />
@@ -40,7 +47,7 @@ const Playback = (player_ref) => {
                                         </p>
                                     </div>
                                     <div className="col s3" style={{alignSelf: "center"}}>
-                                    {(playback_playing) ? sec2timestamp(playback_progress.playedSeconds) : "00:00"}
+                                        {(playback_playing) ? sec2timestamp(playback_progress.playedSeconds) : "00:00"}
                                     </div>
                                 </div>
 
@@ -84,7 +91,8 @@ const Playback = (player_ref) => {
                                         <div className="col s4 right-align" style={{alignSelf: "center"}}>
                                             {buttonHelper({
                                                 icon: "fast_rewind",
-                                                size: "medium"
+                                                size: "medium",
+                                                onClick: callPlayback
                                             })}
                                         </div>
                                         <div className="col s4 center-align">
@@ -97,7 +105,8 @@ const Playback = (player_ref) => {
                                         <div className="col s4 left-align" style={{alignSelf: "center"}}>
                                             {buttonHelper({
                                                 icon: "fast_forward",
-                                                size: "medium"
+                                                size: "medium",
+                                                onClick: playNext
                                             })}
                                         </div>
                                     </div>
@@ -105,11 +114,20 @@ const Playback = (player_ref) => {
                                     <div className="row" style={{display: "flex"}}>
                                         <div className="col s9 center-align">
                                             <p className="range-field">
-                                                <input type="range" min="0" max="100" 
-                                                    value={playback_volume}                                        
-                                                    name="playback_volume"
-                                                    onChange={(e) => contextSet(e.target)}
-                                                />
+                                                {
+                                                    (!settings_logarithmic_volume) ?
+                                                        <input type="range" min="0" max="100" 
+                                                        value={playback_volume}                                        
+                                                        name="playback_volume"
+                                                        onChange={(e) => volumeAdjust(e.target)}
+                                                        />
+                                                    :
+                                                        <input type="range" min="-40" max="0" 
+                                                        value={playback_volume_dB}                                        
+                                                        name="playback_volume"
+                                                        onChange={(e) => volumeAdjust(e.target)}
+                                                        />
+                                                }
                                             </p>
                                         </div>
                                         <div className="col s3" style={{alignSelf: "center"}}>

@@ -10,20 +10,20 @@ const Playlist = () => {
                 (value) => {
                     const {
                         playlist,
-                        playNext, 
+                        startPlaylist, 
                         playlistRemove
                     } = value;
 
                     return (
                             <div className="container">
                                 <p>Playlist</p>
-                                {playlist.map(item => videoCard(item, false, () => playNext(item.url),  () => playlistRemove(item)))}
+                                {playlist.map(item => videoCard(item, false, () => startPlaylist(item.url),  (info) => playlistRemove(info)))}
                             </div>
                     );
                 }
             }
         </PlayerConsumer>
-    );      
+    );
 }
 
 export default Playlist;

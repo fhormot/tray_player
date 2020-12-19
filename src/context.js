@@ -11,10 +11,12 @@ class MyContext extends Component {
     super(props);
 
     this.state = {
-      playback_url: 'https://www.youtube.com/watch?v=9Gj47G2e1Jc',
+      playback_url: '',
       playback_volume: 100,
+      playback_volume_dB: 0,
       playback_playing: false,
       playback_repeat: false,
+      playback_shuffle: false,
       playback_duration: 0,
       playback_progress: {
         playedSeconds: 0,
@@ -22,11 +24,13 @@ class MyContext extends Component {
       },
       playback_mute: false,
       playback_metadata: {},
-      search_query: "plastic love",
+      search_query: "",
       search_results: [],
       playlist: [],
+      playback_playlist: [],
       play_from_playlist: true, 
-      play_next: {}
+      playlist_index: 0,
+      settings_logarithmic_volume: true
     };
 
     this.playbackToggle.bind(this);
@@ -35,13 +39,18 @@ class MyContext extends Component {
     this.contextSet.bind(this);
     this.queryGetResults.bind(this);
     this.playNext.bind(this);
-    this.playlistAppend(this);
-    this.playlistRemove(this);
+    this.playlistAppend.bind(this);
+    this.playlistRemove.bind(this);
+    this.volumeAdjust.bind(this);
+    this.startPlaylist.bind(this);
+    this.startSearchPlaylist.bind(this);
+    this.playbackBack.bind(this);
   }
 
   componentDidMount() {
     this.setState({
       playback_volume: JSON.parse(localStorage.getItem('playback_volume')) || 100,
+      playback_volume_dB: JSON.parse(localStorage.getItem('playback_volume_dB')) || 0,
       playback_repeat: JSON.parse(localStorage.getItem('playback_repeat')) || this.state.playback_repeat,
       playback_mute: JSON.parse(localStorage.getItem('playback_mute')) || this.state.playback_mute,
       playlist: JSON.parse(localStorage.getItem('playlist')) || [],
@@ -71,7 +80,6 @@ class MyContext extends Component {
       [event.name]: event.value
     }, () => {
       localStorage.setItem(event.name, JSON.stringify(event.value));
-      // console.log(JSON.parse(localStorage.getItem(event.name)));
     });
   }
 
@@ -99,11 +107,47 @@ class MyContext extends Component {
     }
   }
 
-  playNext = (url) => {
-    // console.log(url);
+  playNext = (forward = true) => {
+      let idx = (this.state.playlist_index >= this.state.playback_playlist.length) 
+        ? 0 : this.state.playlist_index;
+
+      this.setState({
+        playback_url: this.state.playback_playlist[idx].url, 
+        playback_playing: true,
+        playlist_index: idx+1
+      });
+  }
+
+  startPlaylist = (url) => {
+    // Find index by url
+    let idx = 0;
+    for (let item of this.state.playlist){
+      if(item.url === url) {
+        break;
+      } else {
+        idx++;
+      }
+    }
+
+    // Rotate playlist depending on the song that is played
+    let playlist = this.state.playlist.slice(idx).concat(this.state.playlist.slice(0, idx));
+
     this.setState({
-      playback_url: url, 
-      playback_playing: true
+      playlist_index: 0,
+      playback_playlist: playlist,
+      play_from_playlist: true
+    }, () => {
+      this.playNext();
+    });
+  }
+
+  startSearchPlaylist = (item) => {
+    this.setState({
+      playlist_index: 0,
+      playback_playlist: item,
+      play_from_playlist: false
+    }, () => {
+      this.playNext();
     })
   }
 
@@ -112,16 +156,46 @@ class MyContext extends Component {
       playlist: [...this.state.playlist, item]
     }, () => {
       localStorage.setItem('playlist', JSON.stringify(this.state.playlist));
-      // console.log(JSON.parse(localStorage.getItem('playlist')));
-      // console.log(this.state.playlist);
     });
   }
 
-  playlistRemove = (item) => {
-    const items = this.state.playlist.filter(item => item.videoId !== item.videoId);
+  playlistRemove = (info) => {
+    const items = this.state.playlist.filter(item => item.videoId !== info.videoId);
+
     this.setState({ 
       playlist: items 
+    }, () => {
+      localStorage.setItem('playlist', JSON.stringify(this.state.playlist));
     });
+  }
+
+  volumeAdjust = (event) => {
+    const volume_linear = 
+      (this.state.settings_logarithmic_volume) 
+        ? Math.round(Math.pow(10, (event.value/20.0))) 
+        : event.value;
+    const volume_db = 
+      (this.state.settings_logarithmic_volume) 
+        ? event.value 
+        : Math.round(20*Math.log10(event.value));
+    
+    this.contextSet({name: "playback_volume", value: volume_linear});
+    this.contextSet({name: "playback_volume_dB", value: volume_dB});
+  }
+
+  playbackBack = (ref) => {
+    if(this.state.playback_progress.playedSeconds > 5){
+      ref.seekTo(0);
+    } else {
+      let idx = this.state.playlist_index;
+      const pl_len = this.state.playlist.length;
+
+      idx = (idx + pl_len - 1) % (pl_len);
+
+      this.setState({
+        playlist_index: idx
+      }, this.playNext());
+    }
   }
 
   render() {
@@ -135,9 +209,13 @@ class MyContext extends Component {
           playbackRepeatToggle: this.playbackRepeatToggle,
           playbackMuteToggle: this.playbackMuteToggle,
           playbackGetMetadata: this.playbackGetMetadata,
-          playNext: this.playNext,
           playlistAppend: this.playlistAppend,
-          playlistRemove: this.playlistRemove
+          playlistRemove: this.playlistRemove,
+          volumeAdjust: this.volumeAdjust,
+          startPlaylist: this.startPlaylist,
+          playNext: this.playNext,
+          startSearchPlaylist: this.startSearchPlaylist,
+          playbackBack: this.playbackBack
         }}
       >
           {this.props.children}

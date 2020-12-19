@@ -26,7 +26,16 @@ const Search = () => {
                                                 placeholder="Search" 
                                                 type="text" 
                                                 className="validate" 
-                                                onChange={(e) => contextSet({name: "search_query", value: e.target.value})}
+                                                name="search_query"
+                                                onChange={(e) => contextSet(e.target)}
+                                                onKeyPress={
+                                                    (e) => {
+                                                        if(e.keyCode === 13){
+                                                            console.log("press");
+                                                            contextSet(e.target);
+                                                        }
+                                                    }
+                                                }
                                                 />
                                         </div>
                                         <div className="col s4 center-align" style={{alignSelf: "center"}}>
@@ -41,8 +50,8 @@ const Search = () => {
 
                                 </div>
                             </div>
-                            
-                            {search_results.map(item => videoCard(item, true, () => playNext(item.url),  () => playlistAppend(item)))}
+
+                            {search_results.map(item => videoCard(item, true, () => playNext(item),  () => playlistAppend(item)))}
                         </Fragment>
                     );
                 }

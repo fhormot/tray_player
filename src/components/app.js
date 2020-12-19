@@ -62,7 +62,7 @@ class App extends React.Component {
                     muted={contextStore.playback_mute}
                     onDuration={(duration) => contextStore.contextSet({name: "playback_duration", value: duration})}
                     onProgress={(duration) => contextStore.contextSet({name: "playback_progress", value: duration})}
-                    // onEnded={() => contextStore.playNext(contextStore.play_next)}
+                    onEnded={() => contextStore.playNext(contextStore.play_next)}
                 />
             </Fragment>
         );

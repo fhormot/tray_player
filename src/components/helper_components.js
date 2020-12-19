@@ -38,7 +38,7 @@ export function sec2timestamp(input_seconds) {
     );
 }
 
-export function videoCard(info, playlistAdd, onPlayClick, onAddClick) {
+export function videoCard(info, playlistAdd, onPlayClick, onAddClick, startPlaylist) {
     // console.log(info);
     const videoId = info.videoId;
     if (videoId){
@@ -79,12 +79,11 @@ export function videoCard(info, playlistAdd, onPlayClick, onAddClick) {
                         
                         <div className="card-action">
                             <a href="#"
-                                onClick={
-                                    (e) => {
-                                        e.preventDefault();
-                                        onAddClick();
-                                }
-                            }>
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    onAddClick(info);
+                                }}
+                            >
                                 {(playlistAdd) ? "Add to playlist" : "Remove"}
                             </a>
                         </div>
