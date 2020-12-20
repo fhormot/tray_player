@@ -17,7 +17,14 @@ const Playlist = () => {
                     return (
                             <div className="container">
                                 <p>Playlist</p>
-                                {playlist.map(item => videoCard(item, false, () => startPlaylist(item.url),  (info) => playlistRemove(info)))}
+                                {
+                                    playlist.map(item => videoCard(
+                                        item, 
+                                        false, 
+                                        () => startPlaylist(item.url),  
+                                        () => playlistRemove(item)
+                                    ))
+                                }
                             </div>
                     );
                 }

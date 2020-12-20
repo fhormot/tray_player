@@ -108,8 +108,12 @@ class MyContext extends Component {
   }
 
   playNext = (forward = true) => {
+      // console.log(this.state.playlist_index);
+
       let idx = (this.state.playlist_index >= this.state.playback_playlist.length) 
         ? 0 : this.state.playlist_index;
+
+      // console.log(idx);
 
       this.setState({
         playback_url: this.state.playback_playlist[idx].url, 
@@ -152,10 +156,25 @@ class MyContext extends Component {
   }
 
   playlistAppend = (item) => {
+    let playlist_array = [...this.state.playlist, item];
+
+    playlist_array.sort((a, b) => {
+      var nameA = a.title.toUpperCase(); // ignore upper and lowercase
+      var nameB = b.title.toUpperCase(); // ignore upper and lowercase
+      if (nameA < nameB) {
+        return -1; //nameA comes first
+      }
+      if (nameA > nameB) {
+        return 1; // nameB comes first
+      }
+      return 0;  // names must be equal
+    });
+
     this.setState({
-      playlist: [...this.state.playlist, item]
+      playlist: playlist_array
     }, () => {
       localStorage.setItem('playlist', JSON.stringify(this.state.playlist));
+      // console.log(this.state.playlist);
     });
   }
 
@@ -187,10 +206,8 @@ class MyContext extends Component {
     if(this.state.playback_progress.playedSeconds > 5){
       ref.seekTo(0);
     } else {
-      let idx = this.state.playlist_index;
       const pl_len = this.state.playlist.length;
-
-      idx = (idx + pl_len - 1) % (pl_len);
+      const idx = (this.state.playlist_index + pl_len - 1) % (pl_len);
 
       this.setState({
         playlist_index: idx

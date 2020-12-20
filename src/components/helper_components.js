@@ -38,7 +38,7 @@ export function sec2timestamp(input_seconds) {
     );
 }
 
-export function videoCard(info, playlistAdd, onPlayClick, onAddClick, startPlaylist) {
+export function videoCard(info, playlistAdd, onPlayClick, onAddClick) {
     // console.log(info);
     const videoId = info.videoId;
     if (videoId){
@@ -46,8 +46,6 @@ export function videoCard(info, playlistAdd, onPlayClick, onAddClick, startPlayl
         const title = info.title || "";
         const duration = (info.duration) ? info.duration.timestamp : "";
         const type = info.type;
-
-        // console.log(type);
         
         return (
             <Fragment key={videoId}>
@@ -60,12 +58,6 @@ export function videoCard(info, playlistAdd, onPlayClick, onAddClick, startPlayl
                             </div>
                             <div className="card-content col s8" style={{padding: "3px"}}>
                                 <p className="truncate">{title}</p>
-                                {() => {
-                                     if (type != "live")
-                                        return    <p className="truncate">Live</p>;
-                                     else
-                                         return   <p className="truncate">Duration: {duration}</p>;
-                                }}
 
                                 {buttonHelper({
                                     icon: "play_arrow",
@@ -81,7 +73,7 @@ export function videoCard(info, playlistAdd, onPlayClick, onAddClick, startPlayl
                             <a href="#"
                                 onClick={(e) => {
                                     e.preventDefault();
-                                    onAddClick(info);
+                                    onAddClick();
                                 }}
                             >
                                 {(playlistAdd) ? "Add to playlist" : "Remove"}

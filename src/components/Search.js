@@ -23,6 +23,7 @@ const Search = () => {
                                     <div className="row" style={{display: "flex"}}>
                                         <div className="input-field col s8">
                                             <input 
+                                                autoFocus
                                                 placeholder="Search" 
                                                 type="text" 
                                                 className="validate" 
@@ -30,9 +31,8 @@ const Search = () => {
                                                 onChange={(e) => contextSet(e.target)}
                                                 onKeyPress={
                                                     (e) => {
-                                                        if(e.keyCode === 13){
-                                                            console.log("press");
-                                                            contextSet(e.target);
+                                                        if(e.key === 'Enter'){
+                                                            queryGetResults();
                                                         }
                                                     }
                                                 }
