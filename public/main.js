@@ -33,7 +33,7 @@ const createWindow = () => {
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
-  
+
   const iconName = process.platform === 'win32' ? 'windows-icon.png' : 'iconTemplate.png';
   const iconPath = path.join(__dirname, './assets', iconName);                                // ./assets with respect to the app folder
   tray = new TrayIcon(iconPath, mainWindow);

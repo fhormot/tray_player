@@ -30,41 +30,49 @@ const Playback = (player_ref) => {
                     const callPlayback = () => {
                         playbackBack(player_ref);
                     }
-                    
+
                     return (
                         <Fragment>
                             <div className="divider" />
 
-                            <div className="container">
-                                <div className="row" style={{display: "flex"}}>
-                                    <div className="col s9">
+                            {/* <div className="container"> */}
+                                <div className="row" style={{display: "flex", marginBottom: 0}}>
+                                    <div className="col s12">
                                         <p className="range-field">
-                                            <input type="range" min="0" max={playback_duration} 
+                                            <input type="range" min="0" max={playback_duration}
+                                                style={{marginBottom: 0}} 
                                                 value={playback_progress.playedSeconds}                                        
                                                 name="playback_progress"
                                                 onChange={(e) => player_ref.seekTo(e.target.value)}
                                             />
                                         </p>
                                     </div>
-                                    <div className="col s3" style={{alignSelf: "center"}}>
-                                        {(playback_playing) ? sec2timestamp(playback_progress.playedSeconds) : "00:00"}
+                                </div>
+
+                                <div className="row" style={{paddingTop: 0, margin: 0}}>
+                                    <div className="col s4 left-align" style={{alignSelf: "center"}}>
+                                        {sec2timestamp(playback_progress.playedSeconds)}
+                                    </div>
+                                    <div className="col s4" />
+                                    <div className="col s4 right-align" style={{alignSelf: "center"}}>
+                                        {sec2timestamp(playback_duration)}
                                     </div>
                                 </div>
 
-                                <div className="row" style={{display: "flex"}}>
+                                <div className="row" style={{display: "flex", margin: 0}}>
                                     <div className="col s12">
-                                        <p className="truncate">
-                                            {(playback_metadata.title) ? playback_metadata.title : " "}
+                                        <p className="truncate center-align">
+                                            {(playback_metadata.title) ? playback_metadata.title : "Not playing"}
                                         </p>
                                     </div>
                                 </div>
-                            </div>
+                            {/* </div> */}
 
-                            <div className="divider" />
+                            {/* <div className="divider" /> */}
 
-                            <div className="section">
-                                <div className="container">
-                                    <div className="row">
+                            {/* <div className="section"> */}
+                                {/* <div className="container"> */}
+                                    <div className="row" style={{marginTop: '30px'}}>
                                         <div className="col s4 right-align">
                                             {buttonHelper({
                                                 icon: "repeat",
@@ -87,7 +95,7 @@ const Playback = (player_ref) => {
                                         </div>
                                     </div>
 
-                                    <div className="row" style={{display: "flex"}}>
+                                    <div className="row" style={{display: "flex", marginBottom:0}}>
                                         <div className="col s4 right-align" style={{alignSelf: "center"}}>
                                             {buttonHelper({
                                                 icon: "fast_rewind",
@@ -111,21 +119,27 @@ const Playback = (player_ref) => {
                                         </div>
                                     </div>
 
-                                    <div className="row" style={{display: "flex"}}>
+                                    <div className="row" style={{
+                                        display: "flex", 
+                                        marginTop: "20px", 
+                                        marginBottom: 0
+                                    }}>
                                         <div className="col s9 center-align">
                                             <p className="range-field">
                                                 {
                                                     (!settings_logarithmic_volume) ?
                                                         <input type="range" min="0" max="100" 
-                                                        value={playback_volume}                                        
-                                                        name="playback_volume"
-                                                        onChange={(e) => volumeAdjust(e.target)}
+                                                            style={{marginBottom: 0}}
+                                                            value={playback_volume}                                        
+                                                            name="playback_volume"
+                                                            onChange={(e) => volumeAdjust(e.target)}
                                                         />
                                                     :
                                                         <input type="range" min="-40" max="0" 
-                                                        value={playback_volume_dB}                                        
-                                                        name="playback_volume"
-                                                        onChange={(e) => volumeAdjust(e.target)}
+                                                            style={{marginBottom: 0}}
+                                                            value={playback_volume_dB}                                        
+                                                            name="playback_volume"
+                                                            onChange={(e) => volumeAdjust(e.target)}
                                                         />
                                                 }
                                             </p>
@@ -139,8 +153,8 @@ const Playback = (player_ref) => {
                                             })}
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                                {/* </div> */}
+                            {/* </div> */}
                         </Fragment>
                     );
                 }

@@ -156,8 +156,10 @@ class MyContext extends Component {
   }
 
   playlistAppend = (item) => {
+    // Append playlist with the new item
     let playlist_array = [...this.state.playlist, item];
 
+    // Sort alphabetically
     playlist_array.sort((a, b) => {
       var nameA = a.title.toUpperCase(); // ignore upper and lowercase
       var nameB = b.title.toUpperCase(); // ignore upper and lowercase
@@ -170,11 +172,29 @@ class MyContext extends Component {
       return 0;  // names must be equal
     });
 
+    // Remove doubles from the playlist (just in case there are some)
+    const unique_playlist = [];
+
+    playlist_array.forEach((item) => {
+      let flag = false;
+
+      unique_playlist.forEach(element => {
+        if(item.videoId === element.videoId){
+          flag = true;
+        }
+      });
+
+      if(!flag){
+        unique_playlist.push(item);
+      }
+    });
+
+
     this.setState({
-      playlist: playlist_array
+      playlist: unique_playlist
     }, () => {
+      // Store in local storage
       localStorage.setItem('playlist', JSON.stringify(this.state.playlist));
-      // console.log(this.state.playlist);
     });
   }
 

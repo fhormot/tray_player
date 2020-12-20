@@ -15,17 +15,23 @@ const Playlist = () => {
                     } = value;
 
                     return (
-                            <div className="container">
-                                <p>Playlist</p>
-                                {
-                                    playlist.map(item => videoCard(
-                                        item, 
-                                        false, 
-                                        () => startPlaylist(item.url),  
-                                        () => playlistRemove(item)
+                        <Fragment>
+
+                            {/* <div 
+                                className="container" 
+                                style={{marginLeft: "0px", marginRight: "0px"}}>
+                            
+                            // <p>Playlist</p> */}
+                            {
+                                playlist.map(item => videoCard(
+                                    item, 
+                                    false, 
+                                    () => startPlaylist(item.url),  
+                                    () => playlistRemove(item)
                                     ))
                                 }
-                            </div>
+                            {/* </div> */}
+                        </Fragment>
                     );
                 }
             }

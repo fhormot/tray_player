@@ -29,12 +29,14 @@ function zeroPad(num, places) {
 }
 
 export function sec2timestamp(input_seconds) {
-    const hours = Math.floor(input_seconds/3600);
-    const minutes = Math.floor((input_seconds%3600)/60);
-    const seconds = Math.floor(input_seconds%60);
+    const hours = (input_seconds/3600) ? zeroPad(Math.floor(input_seconds/3600), 2) : "";
+    const minutes = zeroPad(Math.floor((input_seconds%3600)/60), 2);
+    const seconds = zeroPad(Math.floor(input_seconds%60), 2);
 
     return(
-        <p>{zeroPad(hours, 2)}:{zeroPad(minutes, 2)}:{zeroPad(seconds, 2)}</p>
+        <p style={{marginTop: 0, marginBottom: 0}}>
+            {hours}{(hours) ? ":" : ""}{minutes}:{seconds}
+        </p>
     );
 }
 
@@ -49,41 +51,40 @@ export function videoCard(info, playlistAdd, onPlayClick, onAddClick) {
         
         return (
             <Fragment key={videoId}>
-            <div className="row">
-                <div className="col s12">
-                    <div className="card">
-                        <div className="row">
-                            <div className="card-image col s4">
-                                    <img src={thumbnail} />
-                            </div>
-                            <div className="card-content col s8" style={{padding: "3px"}}>
-                                <p className="truncate">{title}</p>
+                <div className="row">
+                    {/* <div className="col s12"> */}
+                        <div className="card">
+                            <div className="row">
+                                <div className="card-image col s4">
+                                        <img src={thumbnail} />
+                                </div>
+                                <div className="card-content col s8" style={{padding: "3px"}}>
+                                    <p className="truncate">{title}</p>
 
-                                {buttonHelper({
-                                    icon: "play_arrow",
-                                    size: "medium",
-                                    xtraStyles: "halfway-fab",
-                                    onClick: onPlayClick
-                                })}
-
+                                    {buttonHelper({
+                                        icon: "play_arrow",
+                                        size: "small",
+                                        xtraStyles: "halfway-fab",
+                                        onClick: onPlayClick
+                                    })}
+                                </div>
                             </div>
+                            
+                            <div className="card-action">
+                                <a href="#"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        onAddClick();
+                                    }}
+                                    >
+                                    {(playlistAdd) ? "Add to playlist" : "Remove"}
+                                </a>
+                            </div>
+                            
                         </div>
-                        
-                        <div className="card-action">
-                            <a href="#"
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    onAddClick();
-                                }}
-                            >
-                                {(playlistAdd) ? "Add to playlist" : "Remove"}
-                            </a>
-                        </div>
-                        
-                    </div>
+                    {/* </div> */}
                 </div>
-            </div>
-        </Fragment>
+            </Fragment>
         );
     }
 }
