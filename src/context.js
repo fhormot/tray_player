@@ -47,7 +47,6 @@ class MyContext extends Component {
     this.volumeAdjust.bind(this);
     this.startPlaylist.bind(this);
     this.startSearchPlaylist.bind(this);
-    this.playbackBack.bind(this);
     this.playlistExists.bind(this);
   }
 
@@ -112,18 +111,20 @@ class MyContext extends Component {
   }
 
   playNext = (forward = true) => {
-    if(forward){     
-      let idx = (this.state.playlist_index % this.state.playback_playlist.length) 
-            
-      this.setState({
-        playback_url: this.state.playback_playlist[idx].url, 
-        playback_current: this.state.playback_playlist[idx],
-        playback_playing: true,
-        playlist_index: idx+1
-      });
-    } else {
-      // Play previous song
+    const pl_len = this.state.playback_playlist.length;
+    let idx = (this.state.playlist_index % pl_len); 
+
+    if(!forward){     
+      // Roll index back by 2 (one song back + playlist_index offset of 1)
+      idx = (this.state.playlist_index + 2*pl_len - 2) % (pl_len);// + 1;
     }
+            
+    this.setState({
+      playback_url: this.state.playback_playlist[idx].url, 
+      playback_current: this.state.playback_playlist[idx],
+      playback_playing: true,
+      playlist_index: idx+1
+    });
   }
 
   playlistExists = (info) => {
@@ -146,11 +147,11 @@ class MyContext extends Component {
     }
 
     // Rotate playlist depending on the song that is played
-    let playlist = this.state.playlist.slice(idx).concat(this.state.playlist.slice(0, idx));
+    // let playlist = this.state.playlist.slice(idx).concat(this.state.playlist.slice(0, idx));
 
     this.setState({
-      playlist_index: 0,
-      playback_playlist: playlist,
+      playlist_index: idx,
+      playback_playlist: this.state.playlist,
       play_from_playlist: true
     }, () => {
       this.playNext();
@@ -234,21 +235,6 @@ class MyContext extends Component {
     this.contextSet({name: "playback_volume_dB", value: volume_dB});
   }
 
-  playbackBack = (ref) => {
-    if(this.state.playback_progress.playedSeconds > 5){
-      ref.seekTo(0);
-    } else {
-      const pl_len = this.state.playlist.length;
-      const idx = (this.state.playlist_index + 2*pl_len - 2) % (pl_len) + 1;
-
-      console.log(`CP 3: ${idx}`);
-
-      this.setState({
-        playlist_index: idx
-      }, this.playNext());
-    }
-  }
-
   render() {
     return (
       <PlayerProvider 
@@ -266,7 +252,6 @@ class MyContext extends Component {
           startPlaylist: this.startPlaylist,
           playNext: this.playNext,
           startSearchPlaylist: this.startSearchPlaylist,
-          playbackBack: this.playbackBack,
           playlistExists: this.playlistExists
         }}
       >

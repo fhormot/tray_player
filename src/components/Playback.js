@@ -29,7 +29,11 @@ const Playback = (player_ref) => {
                     } = value;
                     
                     const callPlayback = () => {
-                        playbackBack(player_ref);
+                        if(playback_progress.playedSeconds > 5) {
+                            player_ref.seekTo(0);
+                        } else {
+                            playNext(false);
+                        }
                     }
 
                     return (
