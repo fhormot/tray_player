@@ -13,7 +13,8 @@ const Search = () => {
                         search_results,
                         queryGetResults,
                         playNext, 
-                        playlistAppend
+                        playlistAppend, 
+                        playlistExists
                     } = value;
 
                     return (
@@ -29,13 +30,11 @@ const Search = () => {
                                                 className="validate" 
                                                 name="search_query"
                                                 onChange={(e) => contextSet(e.target)}
-                                                onKeyPress={
-                                                    (e) => {
-                                                        if(e.key === 'Enter'){
-                                                            queryGetResults();
-                                                        }
+                                                onKeyPress={(e) => {
+                                                    if(e.key === 'Enter'){
+                                                        queryGetResults();
                                                     }
-                                                }
+                                                }}
                                                 />
                                         </div>
                                         <div className="col s4 center-align" style={{alignSelf: "center"}}>
@@ -46,12 +45,16 @@ const Search = () => {
                                             })}
                                         </div>
                                     </div>
-
-
                                 </div>
                             </div>
 
-                            {search_results.map(item => videoCard(item, true, () => playNext(item),  () => playlistAppend(item)))}
+                            {search_results.map(item => {
+                                if (!playlistExists(item)){
+                                    return videoCard(item, true, () => playNext(item),  () => playlistAppend(item));
+                                } else {
+                                    return videoCard(item, false, () => playNext(item),  () => playlistRemove(item));
+                                }
+                            })}
                         </Fragment>
                     );
                 }

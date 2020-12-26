@@ -17,7 +17,7 @@ export function buttonHelper(config) {
                 onClick={onClick}
                 name={name}
             >
-                <i className="material-icons">{icon}</i>
+                <i className="material-icons" style={{margin: "0"}}>{icon}</i>
             </a>
         </Fragment>
     );
@@ -29,7 +29,7 @@ function zeroPad(num, places) {
 }
 
 export function sec2timestamp(input_seconds) {
-    const hours = (input_seconds/3600) ? zeroPad(Math.floor(input_seconds/3600), 2) : "";
+    const hours = (Math.floor(input_seconds/36000))? zeroPad(Math.floor(input_seconds/3600), 2) : "";
     const minutes = zeroPad(Math.floor((input_seconds%3600)/60), 2);
     const seconds = zeroPad(Math.floor(input_seconds%60), 2);
 
@@ -52,37 +52,38 @@ export function videoCard(info, playlistAdd, onPlayClick, onAddClick) {
         return (
             <Fragment key={videoId}>
                 <div className="row">
-                    {/* <div className="col s12"> */}
-                        <div className="card">
-                            <div className="row">
-                                <div className="card-image col s4">
-                                        <img src={thumbnail} />
-                                </div>
-                                <div className="card-content col s8" style={{padding: "3px"}}>
-                                    <p className="truncate">{title}</p>
+                    <div className="card" style={{margin: "0"}}>
+                        <div className="row" style={{margin: "0"}}>
+                            <div className="card-image col s4" style={{padding: "0"}}>
+                                    <img src={thumbnail} />
+                            </div>
+                            <div className="card-content col s8" style={{padding: "3px"}}>
+                                    <div className="col s12">
+                                        <p className="truncate">{title}</p> 
+                                        <br /> {/* Required line break for double halfway FAB buttons to function */}
+                                    </div>
 
-                                    {buttonHelper({
-                                        icon: "play_arrow",
-                                        size: "small",
-                                        xtraStyles: "halfway-fab",
-                                        onClick: onPlayClick
-                                    })}
-                                </div>
+                                    <div className="card-image col s6" style={{margin: "0"}}/>
+                                    <div className="card-image col s3" style={{margin: "0"}}>
+                                        {buttonHelper({
+                                            icon: (playlistAdd) ? "add" : "remove",
+                                            size: "small",
+                                            xtraStyles: "halfway-fab",
+                                            onClick: onAddClick
+                                        })}
+                                    </div>
+                                    <div className="card-image col s3" style={{margin: "0"}}>
+                                        {buttonHelper({
+                                            icon: "play_arrow",
+                                            size: "small",
+                                            xtraStyles: "halfway-fab",
+                                            onClick: onPlayClick
+                                        })}
+                                    </div>
+
                             </div>
-                            
-                            <div className="card-action">
-                                <a href="#"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        onAddClick();
-                                    }}
-                                    >
-                                    {(playlistAdd) ? "Add to playlist" : "Remove"}
-                                </a>
-                            </div>
-                            
-                        </div>
-                    {/* </div> */}
+                        </div>                            
+                    </div>
                 </div>
             </Fragment>
         );

@@ -22,6 +22,9 @@ class MyContext extends Component {
         playedSeconds: 0,
         played: 0
       },
+      playback_current: {
+        title: ""
+      },
       playback_mute: false,
       playback_metadata: {},
       search_query: "",
@@ -30,7 +33,7 @@ class MyContext extends Component {
       playback_playlist: [],
       play_from_playlist: true, 
       playlist_index: 0,
-      settings_logarithmic_volume: true
+      settings_logarithmic_volume: false
     };
 
     this.playbackToggle.bind(this);
@@ -45,6 +48,7 @@ class MyContext extends Component {
     this.startPlaylist.bind(this);
     this.startSearchPlaylist.bind(this);
     this.playbackBack.bind(this);
+    this.playlistExists.bind(this);
   }
 
   componentDidMount() {
@@ -83,8 +87,8 @@ class MyContext extends Component {
     });
   }
 
-  playbackGetMetadata = () => {
-    ipcRenderer.send('youtube-dl:metadata', this.state.playback_url);
+  playbackGetMetadata = (item) => {
+    ipcRenderer.send('youtube-dl:metadata', item.url);
 
     ipcRenderer.on('youtube-dl:metadata', (event, info) => {
       console.log(info);
@@ -108,18 +112,26 @@ class MyContext extends Component {
   }
 
   playNext = (forward = true) => {
-      // console.log(this.state.playlist_index);
-
-      let idx = (this.state.playlist_index >= this.state.playback_playlist.length) 
-        ? 0 : this.state.playlist_index;
-
-      // console.log(idx);
-
+    if(forward){     
+      let idx = (this.state.playlist_index % this.state.playback_playlist.length) 
+            
       this.setState({
         playback_url: this.state.playback_playlist[idx].url, 
+        playback_current: this.state.playback_playlist[idx],
         playback_playing: true,
         playlist_index: idx+1
       });
+    } else {
+      // Play previous song
+    }
+  }
+
+  playlistExists = (info) => {
+    const items = this.state.playlist.filter(item => item.videoId === info.videoId);
+
+    // console.log(items);
+
+    return (items.length) ? true : false;
   }
 
   startPlaylist = (url) => {
@@ -211,12 +223,12 @@ class MyContext extends Component {
   volumeAdjust = (event) => {
     const volume_linear = 
       (this.state.settings_logarithmic_volume) 
-        ? Math.round(Math.pow(10, (event.value/20.0))) 
+        ? Math.pow(10, (event.value/20.0)) 
         : event.value;
     const volume_db = 
       (this.state.settings_logarithmic_volume) 
         ? event.value 
-        : Math.round(20*Math.log10(event.value));
+        : 20*Math.log10(event.value);
     
     this.contextSet({name: "playback_volume", value: volume_linear});
     this.contextSet({name: "playback_volume_dB", value: volume_dB});
@@ -227,7 +239,9 @@ class MyContext extends Component {
       ref.seekTo(0);
     } else {
       const pl_len = this.state.playlist.length;
-      const idx = (this.state.playlist_index + pl_len - 1) % (pl_len);
+      const idx = (this.state.playlist_index + 2*pl_len - 2) % (pl_len) + 1;
+
+      console.log(`CP 3: ${idx}`);
 
       this.setState({
         playlist_index: idx
@@ -252,7 +266,8 @@ class MyContext extends Component {
           startPlaylist: this.startPlaylist,
           playNext: this.playNext,
           startSearchPlaylist: this.startSearchPlaylist,
-          playbackBack: this.playbackBack
+          playbackBack: this.playbackBack,
+          playlistExists: this.playlistExists
         }}
       >
           {this.props.children}

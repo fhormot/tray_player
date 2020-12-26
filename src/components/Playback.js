@@ -24,7 +24,8 @@ const Playback = (player_ref) => {
                         playNext,
                         playbackBack,
                         volumeAdjust,
-                        settings_logarithmic_volume
+                        settings_logarithmic_volume,
+                        playback_current
                     } = value;
                     
                     const callPlayback = () => {
@@ -62,7 +63,7 @@ const Playback = (player_ref) => {
                                 <div className="row" style={{display: "flex", margin: 0}}>
                                     <div className="col s12">
                                         <p className="truncate center-align">
-                                            {(playback_metadata.title) ? playback_metadata.title : "Not playing"}
+                                            {(playback_playing) ? playback_current.title : "Not playing"}
                                         </p>
                                     </div>
                                 </div>
