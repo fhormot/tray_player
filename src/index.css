@@ -4,3 +4,21 @@
     /* margin: 0 !important; */
     /* border: 1px solid blue; */
 }
+
+/* body {
+    overflow: hidden;
+} */
+
+.scrollHide {
+    overflow-y: scroll;
+    /* border: 1px solid red; */
+}
+
+/* 
+    Needs to be improved as it scrolls the whole page
+    -> Currently scrolls the whole page
+    -> TODO: Scroll the element
+*/
+::-webkit-scrollbar {
+    display: none;
+}

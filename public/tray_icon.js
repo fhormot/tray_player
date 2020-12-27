@@ -38,6 +38,23 @@ class TrayIcon extends Tray {
   onRightClick() {
     const menuConfig = Menu.buildFromTemplate([
       {
+        label: 'Play/Pause',
+        click: () => this.mainWindow.webContents.send('control:playback')
+      },
+      {
+        label: 'Next',
+        click: () => this.mainWindow.webContents.send('control:next')
+      },
+      {
+        label: 'Previous',
+        click: () => this.mainWindow.webContents.send('control:back')
+      },
+      {
+        label: 'Mute',
+        click: () => this.mainWindow.webContents.send('control:mute')
+      },
+      { type: "separator" },
+      {
         label: 'Quit',
         click: () => app.quit()
       }

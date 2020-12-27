@@ -41,6 +41,7 @@ const Search = () => {
                                             {buttonHelper({
                                                 icon: "search",
                                                 size: "small",
+                                                active: true,
                                                 onClick: queryGetResults
                                             })}
                                         </div>

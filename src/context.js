@@ -16,6 +16,7 @@ class MyContext extends Component {
       playback_volume_dB: 0,
       playback_playing: false,
       playback_repeat: false,
+      playlist_loop: false,
       playback_shuffle: false,
       playback_duration: 0,
       playback_progress: {
@@ -33,7 +34,7 @@ class MyContext extends Component {
       playback_playlist: [],
       play_from_playlist: true, 
       playlist_index: 0,
-      settings_logarithmic_volume: false
+      settings_logarithmic_volume: true
     };
 
     this.playbackToggle.bind(this);
@@ -48,6 +49,9 @@ class MyContext extends Component {
     this.startPlaylist.bind(this);
     this.startSearchPlaylist.bind(this);
     this.playlistExists.bind(this);
+    this.playlistLoopToggle.bind(this);
+    this.playbackShuffleToggle.bind(this);
+    this.playlistLogVolToggle.bind(this);
   }
 
   componentDidMount() {
@@ -57,10 +61,24 @@ class MyContext extends Component {
       playback_repeat: JSON.parse(localStorage.getItem('playback_repeat')) || this.state.playback_repeat,
       playback_mute: JSON.parse(localStorage.getItem('playback_mute')) || this.state.playback_mute,
       playlist: JSON.parse(localStorage.getItem('playlist')) || [],
+      playback_repeat: JSON.parse(localStorage.getItem('playback_repeat')) || false,
+      playback_shuffle: JSON.parse(localStorage.getItem('playback_shuffle')) || false,
+      playback_mute: JSON.parse(localStorage.getItem('playback_mute')) || false,
+      playlist_loop: JSON.parse(localStorage.getItem('playlist_loop')) || false,
     });
+
+    ipcRenderer.on('control:playback', (event, info) => this.playbackToggle());
+    ipcRenderer.on('control:next', (event, info) => this.playNext());
+    ipcRenderer.on('control:back', (event, info) => this.playNext(false));
+    ipcRenderer.on('control:mute', (event, info) => this.playbackMuteToggle());
   }
 
   playbackToggle = () => {
+    // If nothing to play -> do nothing
+    if(!this.state.playback_playlist.length) {
+      return;
+    }
+    
     this.setState({
       playback_playing: !this.state.playback_playing
     });
@@ -69,12 +87,43 @@ class MyContext extends Component {
   playbackRepeatToggle = () => {
     this.setState({
       playback_repeat: !this.state.playback_repeat
+    }, () => {
+      localStorage.setItem("playback_repeat", JSON.stringify(this.state.playback_repeat));
+    });
+  }
+
+  playbackShuffleToggle = () => {
+    this.setState({
+      playback_shuffle: !this.state.playback_shuffle
+    }, () => {
+      localStorage.setItem("playback_shuffle", JSON.stringify(this.state.playback_shuffle));
     });
   }
 
   playbackMuteToggle = () => {
     this.setState({
       playback_mute: !this.state.playback_mute
+    }, () => {
+      localStorage.setItem("playback_mute", JSON.stringify(this.state.playback_mute));
+    });
+  }
+
+  playlistLoopToggle = () => {
+    this.setState({
+      playlist_loop: !this.state.playlist_loop
+    }, () => {
+      localStorage.setItem("playlist_loop", JSON.stringify(this.state.playlist_loop));
+    });
+  }
+
+  playlistLogVolToggle = () => {
+    this.setState({
+      settings_logarithmic_volume: !this.state.settings_logarithmic_volume
+    }, () => {
+      localStorage.setItem(
+        "settings_logarithmic_volume", 
+        JSON.stringify(this.state.settings_logarithmic_volume)
+      );
     });
   }
 
@@ -111,12 +160,17 @@ class MyContext extends Component {
   }
 
   playNext = (forward = true) => {
+    // If nothing to play -> do nothing
+    if(!this.state.playback_playlist.length) {
+      return;
+    }
+
     const pl_len = this.state.playback_playlist.length;
     let idx = (this.state.playlist_index % pl_len); 
 
     if(!forward){     
       // Roll index back by 2 (one song back + playlist_index offset of 1)
-      idx = (this.state.playlist_index + 2*pl_len - 2) % (pl_len);// + 1;
+      idx = (this.state.playlist_index + 2*pl_len - 2) % (pl_len);
     }
             
     this.setState({
@@ -224,12 +278,15 @@ class MyContext extends Component {
   volumeAdjust = (event) => {
     const volume_linear = 
       (this.state.settings_logarithmic_volume) 
-        ? Math.pow(10, (event.value/20.0)) 
+        ? 100.0*Math.pow(10, (event.value/20.0)) 
         : event.value;
-    const volume_db = 
+    const volume_dB = 
       (this.state.settings_logarithmic_volume) 
         ? event.value 
-        : 20*Math.log10(event.value);
+        : 20.0*Math.log10(event.value);
+
+    // console.log(volume_linear);
+    // console.log(volume_dB);
     
     this.contextSet({name: "playback_volume", value: volume_linear});
     this.contextSet({name: "playback_volume_dB", value: volume_dB});
@@ -252,12 +309,15 @@ class MyContext extends Component {
           startPlaylist: this.startPlaylist,
           playNext: this.playNext,
           startSearchPlaylist: this.startSearchPlaylist,
-          playlistExists: this.playlistExists
+          playlistExists: this.playlistExists,
+          playlistLoopToggle: this.playlistLoopToggle,
+          playbackShuffleToggle: this.playbackShuffleToggle,
+          playlistLogVolToggle: this.playlistLogVolToggle
         }}
       >
           {this.props.children}
       </PlayerProvider>
-    )
+    );
   }
 }
 

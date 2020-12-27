@@ -1,12 +1,13 @@
 import React, { Fragment } from 'react';
+import { render } from 'react-dom';
 
-import PlayerContext from '../context';
+import { Redirect } from "react-router-dom";
 
 export function buttonHelper(config) {
     const icon = config.icon || 'update';
     const size = config.size || 'medium';
     const onClick = config.onClick;
-    const active = (config.active) ? "" : "darken-2"
+    const active = (!config.active) ? "" : "darken-2"
     const name = config.name || "button";
     const xtraStyles = config.xtraStyles || "";
 
@@ -68,6 +69,7 @@ export function videoCard(info, playlistAdd, onPlayClick, onAddClick) {
                                         {buttonHelper({
                                             icon: (playlistAdd) ? "add" : "remove",
                                             size: "small",
+                                            active: true,
                                             xtraStyles: "halfway-fab",
                                             onClick: onAddClick
                                         })}
@@ -76,6 +78,7 @@ export function videoCard(info, playlistAdd, onPlayClick, onAddClick) {
                                         {buttonHelper({
                                             icon: "play_arrow",
                                             size: "small",
+                                            active: true,
                                             xtraStyles: "halfway-fab",
                                             onClick: onPlayClick
                                         })}
@@ -90,5 +93,22 @@ export function videoCard(info, playlistAdd, onPlayClick, onAddClick) {
     }
 }
 
-
-
+export function settingsItem(config) {
+    return (
+        <div className="row" style={{display: "flex"}}>
+            <div className="col s8 left-align">
+                <p>
+                    {config.title}
+                </p>
+            </div>
+            <div className="switch col s4 center-align" style={{alignSelf: "center"}}>
+                <label>
+                    {""}
+                    <input type="checkbox" checked={config.active} onClick={config.onClick} />
+                    <span className="lever"></span>
+                    {""}
+                </label>
+            </div>
+        </div>
+    );
+}

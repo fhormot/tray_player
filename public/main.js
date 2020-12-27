@@ -1,4 +1,4 @@
-import electron from 'electron';
+import electron, { globalShortcut } from 'electron';
 import path from 'path';
 import url from 'url';
 import 'babel-polyfill';
@@ -30,7 +30,14 @@ const createWindow = () => {
     slashes: true
   }));
 
+  globalShortcut.register('CommandOrControl+F9', () => mainWindow.webContents.send('control:playback'));
+  globalShortcut.register('CommandOrControl+F10', () => mainWindow.webContents.send('control:next'));
+  globalShortcut.register('CommandOrControl+F11', () => mainWindow.webContents.send('control:back'));
+  globalShortcut.register('CommandOrControl+F12', () => mainWindow.webContents.send('control:mute'));
+
   mainWindow.on('closed', () => {
+    globalShortcut.unregisterAll();
+
     mainWindow = null;
   });
 

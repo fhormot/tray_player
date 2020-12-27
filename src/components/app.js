@@ -24,19 +24,35 @@ class App extends React.Component {
             <Fragment>
                 <Router>
                     <main>
-                        <nav>
+                        <nav className="grey darken-2">
                             <ul>
                                 <li className="left">
-                                    <Link to="/"><i className="medium material-icons">play_arrow</i></Link>
+                                    <Link to="/">
+                                        <i className="medium material-icons">
+                                            play_arrow
+                                        </i>
+                                    </Link>
                                 </li>
                                 <li className="left">
-                                    <Link to="/playlist"><i className="medium material-icons">playlist_play</i></Link>
+                                    <Link to="/playlist">
+                                        <i className="medium material-icons">
+                                            playlist_play
+                                        </i>
+                                    </Link>
                                 </li>
                                 <li className="left">
-                                    <Link to="/search"><i className="medium material-icons">zoom_in</i></Link>
+                                    <Link to="/search">
+                                        <i className="medium material-icons">
+                                            zoom_in
+                                        </i>
+                                    </Link>
                                 </li>
                                 <li className="right">
-                                    <Link to="/settings"><i className="medium material-icons">settings</i></Link>
+                                    <Link to="/settings">
+                                        <i className="medium material-icons">
+                                            settings
+                                        </i>
+                                    </Link>
                                 </li>
                             </ul>
                         </nav>
@@ -58,7 +74,7 @@ class App extends React.Component {
                     loop={contextStore.playback_repeat}
                     url={contextStore.playback_url}
                     playing={contextStore.playback_playing}
-                    volume={contextStore.playback_volume/100}
+                    volume={contextStore.playback_volume/100.0}
                     muted={contextStore.playback_mute}
                     onDuration={(duration) => contextStore.contextSet({name: "playback_duration", value: duration})}
                     onProgress={(duration) => contextStore.contextSet({name: "playback_progress", value: duration})}
