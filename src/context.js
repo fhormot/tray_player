@@ -34,12 +34,11 @@ class MyContext extends Component {
       playback_playlist: [],
       play_from_playlist: true, 
       playlist_index: 0,
-      settings_logarithmic_volume: true
+      settings_logarithmic_volume: false,
+      settings_play_on_start: false
     };
 
-    this.playbackToggle.bind(this);
-    this.playbackRepeatToggle.bind(this);
-    this.playbackMuteToggle.bind(this);
+    this.valueToggle.bind(this);
     this.contextSet.bind(this);
     this.queryGetResults.bind(this);
     this.playNext.bind(this);
@@ -49,81 +48,59 @@ class MyContext extends Component {
     this.startPlaylist.bind(this);
     this.startSearchPlaylist.bind(this);
     this.playlistExists.bind(this);
-    this.playlistLoopToggle.bind(this);
-    this.playbackShuffleToggle.bind(this);
-    this.playlistLogVolToggle.bind(this);
+    this.shufflePlaylist.bind(this);
   }
 
   componentDidMount() {
     this.setState({
-      playback_volume: JSON.parse(localStorage.getItem('playback_volume')) || 100,
-      playback_volume_dB: JSON.parse(localStorage.getItem('playback_volume_dB')) || 0,
-      playback_repeat: JSON.parse(localStorage.getItem('playback_repeat')) || this.state.playback_repeat,
-      playback_mute: JSON.parse(localStorage.getItem('playback_mute')) || this.state.playback_mute,
-      playlist: JSON.parse(localStorage.getItem('playlist')) || [],
-      playback_repeat: JSON.parse(localStorage.getItem('playback_repeat')) || false,
-      playback_shuffle: JSON.parse(localStorage.getItem('playback_shuffle')) || false,
-      playback_mute: JSON.parse(localStorage.getItem('playback_mute')) || false,
-      playlist_loop: JSON.parse(localStorage.getItem('playlist_loop')) || false,
+      playback_volume: 
+        JSON.parse(localStorage.getItem('playback_volume')) || this.state.playback_volume,
+      playback_volume_dB: 
+        JSON.parse(localStorage.getItem('playback_volume_dB')) || this.state.playback_volume_dB,
+      playback_repeat: 
+        JSON.parse(localStorage.getItem('playback_repeat')) || this.state.playback_repeat,
+      playback_mute: 
+        JSON.parse(localStorage.getItem('playback_mute')) || this.state.playback_mute,
+      playlist: 
+        JSON.parse(localStorage.getItem('playlist')) || this.state.playlist,
+      playback_repeat: 
+        JSON.parse(localStorage.getItem('playback_repeat')) || this.state.playback_repeat,
+      playback_shuffle: 
+        JSON.parse(localStorage.getItem('playback_shuffle')) || this.state.playback_shuffle,
+      playback_mute: 
+        JSON.parse(localStorage.getItem('playback_mute')) || this.state.playback_mute,
+      playlist_loop: 
+        JSON.parse(localStorage.getItem('playlist_loop')) || this.state.playlist_loop,
+      settings_logarithmic_volume: 
+        JSON.parse(localStorage.getItem('settings_logarithmic_volume')) || this.state.settings_logarithmic_volume,
+      settings_play_on_start: 
+        JSON.parse(localStorage.getItem('settings_play_on_start')) || this.state.settings_play_on_start,
+    }, () => {
+      // Check if it is required to start playing
+      if(this.state.settings_play_on_start){
+        const pl_len = this.state.playlist.length;
+  
+        let idx = (this.state.playback_shuffle) 
+          ? Math.floor((pl_len - 1) * Math.random()) // Random index
+          : 0;
+  
+        // Restart playlist with a new shuffle
+        this.startPlaylist(this.state.playlist[idx].url);
+      }
     });
 
-    ipcRenderer.on('control:playback', (event, info) => this.playbackToggle());
+    ipcRenderer.on('control:playback', (event, info) => this.valueToggle("playback_playing"));
     ipcRenderer.on('control:next', (event, info) => this.playNext());
     ipcRenderer.on('control:back', (event, info) => this.playNext(false));
     ipcRenderer.on('control:mute', (event, info) => this.playbackMuteToggle());
   }
 
-  playbackToggle = () => {
-    // If nothing to play -> do nothing
-    if(!this.state.playback_playlist.length) {
-      return;
-    }
-    
+  valueToggle = (key) => {
+    console.log(this.state[key]);
     this.setState({
-      playback_playing: !this.state.playback_playing
-    });
-  }
-
-  playbackRepeatToggle = () => {
-    this.setState({
-      playback_repeat: !this.state.playback_repeat
+      [key]: !this.state[key]
     }, () => {
-      localStorage.setItem("playback_repeat", JSON.stringify(this.state.playback_repeat));
-    });
-  }
-
-  playbackShuffleToggle = () => {
-    this.setState({
-      playback_shuffle: !this.state.playback_shuffle
-    }, () => {
-      localStorage.setItem("playback_shuffle", JSON.stringify(this.state.playback_shuffle));
-    });
-  }
-
-  playbackMuteToggle = () => {
-    this.setState({
-      playback_mute: !this.state.playback_mute
-    }, () => {
-      localStorage.setItem("playback_mute", JSON.stringify(this.state.playback_mute));
-    });
-  }
-
-  playlistLoopToggle = () => {
-    this.setState({
-      playlist_loop: !this.state.playlist_loop
-    }, () => {
-      localStorage.setItem("playlist_loop", JSON.stringify(this.state.playlist_loop));
-    });
-  }
-
-  playlistLogVolToggle = () => {
-    this.setState({
-      settings_logarithmic_volume: !this.state.settings_logarithmic_volume
-    }, () => {
-      localStorage.setItem(
-        "settings_logarithmic_volume", 
-        JSON.stringify(this.state.settings_logarithmic_volume)
-      );
+      localStorage.setItem(key, JSON.stringify(this.state[key]));
     });
   }
 
@@ -160,25 +137,36 @@ class MyContext extends Component {
   }
 
   playNext = (forward = true) => {
+    const pl_len = this.state.playback_playlist.length;
     // If nothing to play -> do nothing
-    if(!this.state.playback_playlist.length) {
+    if(!pl_len) {
       return;
     }
 
-    const pl_len = this.state.playback_playlist.length;
-    let idx = (this.state.playlist_index % pl_len); 
 
-    if(!forward){     
-      // Roll index back by 2 (one song back + playlist_index offset of 1)
-      idx = (this.state.playlist_index + 2*pl_len - 2) % (pl_len);
+    // Check if moving forwards or backwards
+    let idx = (forward) 
+      ? (this.state.playlist_index % pl_len)
+      : (this.state.playlist_index + 2*pl_len - 2) % (pl_len);
+
+    // Check for index overflow
+    const overflow = (this.state.playlist_index >= pl_len) ? true : false;
+
+    if(overflow && this.state.playback_shuffle){
+      // Get a random index
+      // Currently playing index === pl_len so skip that one not to repeat the same song
+      let restart_idx = Math.floor((pl_len - 1) * Math.random());
+
+      // Restart playlist with a new shuffle
+      this.startPlaylist(this.state.playback_playlist[restart_idx].url);
+    } else {
+      this.setState({
+        playback_url: this.state.playback_playlist[idx].url, 
+        playback_current: this.state.playback_playlist[idx],
+        playback_playing: true,
+        playlist_index: idx+1
+      });
     }
-            
-    this.setState({
-      playback_url: this.state.playback_playlist[idx].url, 
-      playback_current: this.state.playback_playlist[idx],
-      playback_playing: true,
-      playlist_index: idx+1
-    });
   }
 
   playlistExists = (info) => {
@@ -189,10 +177,24 @@ class MyContext extends Component {
     return (items.length) ? true : false;
   }
 
+  shufflePlaylist = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+
   startPlaylist = (url) => {
+    let playlist = this.state.playlist;
+
+    // Shuffle the playlist if necessary
+    if(this.state.playback_shuffle){
+      this.shufflePlaylist(playlist);
+    }
+
     // Find index by url
     let idx = 0;
-    for (let item of this.state.playlist){
+    for (let item of playlist){
       if(item.url === url) {
         break;
       } else {
@@ -201,11 +203,11 @@ class MyContext extends Component {
     }
 
     // Rotate playlist depending on the song that is played
-    // let playlist = this.state.playlist.slice(idx).concat(this.state.playlist.slice(0, idx));
+    playlist = playlist.slice(idx).concat(playlist.slice(0, idx));
 
     this.setState({
-      playlist_index: idx,
-      playback_playlist: this.state.playlist,
+      playlist_index: 0,
+      playback_playlist: playlist,
       play_from_playlist: true
     }, () => {
       this.playNext();
@@ -297,11 +299,9 @@ class MyContext extends Component {
       <PlayerProvider 
         value={{
           ...this.state,
-          playbackToggle: this.playbackToggle,
+          valueToggle: this.valueToggle,
           contextSet: this.contextSet,
           queryGetResults: this.queryGetResults,
-          playbackRepeatToggle: this.playbackRepeatToggle,
-          playbackMuteToggle: this.playbackMuteToggle,
           playbackGetMetadata: this.playbackGetMetadata,
           playlistAppend: this.playlistAppend,
           playlistRemove: this.playlistRemove,
@@ -310,12 +310,9 @@ class MyContext extends Component {
           playNext: this.playNext,
           startSearchPlaylist: this.startSearchPlaylist,
           playlistExists: this.playlistExists,
-          playlistLoopToggle: this.playlistLoopToggle,
-          playbackShuffleToggle: this.playbackShuffleToggle,
-          playlistLogVolToggle: this.playlistLogVolToggle
         }}
       >
-          {this.props.children}
+        {this.props.children}
       </PlayerProvider>
     );
   }

@@ -24,16 +24,21 @@ const createWindow = () => {
     app.dock.hide();
   }
 
-  mainWindow = new MainWindow(url.format({
+  const urlPath = url.format({
     pathname: path.join(__dirname, 'index.html'),
     protocol: 'file:',
     slashes: true
-  }));
+  });
 
-  globalShortcut.register('CommandOrControl+F9', () => mainWindow.webContents.send('control:playback'));
-  globalShortcut.register('CommandOrControl+F10', () => mainWindow.webContents.send('control:next'));
-  globalShortcut.register('CommandOrControl+F11', () => mainWindow.webContents.send('control:back'));
-  globalShortcut.register('CommandOrControl+F12', () => mainWindow.webContents.send('control:mute'));
+  mainWindow = new MainWindow(urlPath);
+
+  globalShortcut.register('CommandOrControl+Shift+F9', () => mainWindow.webContents.send('control:playback'));
+  globalShortcut.register('CommandOrControl+Shift+F10', () => mainWindow.webContents.send('control:next'));
+  globalShortcut.register('CommandOrControl+Shift+F11', () => mainWindow.webContents.send('control:back'));
+  globalShortcut.register('CommandOrControl+Shift+F12', () => mainWindow.webContents.send('control:mute'));
+
+  // TODO: Add process.env to control this feature
+  // globalShortcut.register('CommandOrControl+Shift+R', () => mainWindow.loadURL(urlPath));
 
   mainWindow.on('closed', () => {
     globalShortcut.unregisterAll();
@@ -42,7 +47,8 @@ const createWindow = () => {
   });
 
   const iconName = process.platform === 'win32' ? 'windows-icon.png' : 'iconTemplate.png';
-  const iconPath = path.join(__dirname, './assets', iconName);                                // ./assets with respect to the app folder
+  const iconPath = path.join(__dirname, './assets', iconName);// ./assets with respect to the app folder
+
   tray = new TrayIcon(iconPath, mainWindow);
 };
 

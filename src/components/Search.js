@@ -19,8 +19,8 @@ const Search = () => {
 
                     return (
                         <Fragment>
-                            <div className="row">
-                                <div className="col s12">
+                            {/* <div className="row"> */}
+                                {/* <div className="col s12"> */}
                                     <div className="row" style={{display: "flex"}}>
                                         <div className="input-field col s8">
                                             <input 
@@ -46,8 +46,8 @@ const Search = () => {
                                             })}
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                                {/* </div> */}
+                            {/* </div> */}
 
                             {search_results.map(item => {
                                 if (!playlistExists(item)){

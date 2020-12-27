@@ -10,17 +10,23 @@ const Settings = () => {
                 (context) => {
                     const {
                         settings_logarithmic_volume,
-                        playlistLogVolToggle
+                        settings_play_on_start,
+                        valueToggle
                     } = context;
 
                     return (
                         <Fragment>
                             <div className="container">
+                                {settingsItem({
+                                    title: "Play on app start", 
+                                    active: settings_play_on_start, 
+                                    onClick: () => valueToggle("settings_play_on_start")
+                                })}
             
                                 {settingsItem({
                                     title: "Logarithmic volume control", 
                                     active: settings_logarithmic_volume, 
-                                    onClick: playlistLogVolToggle
+                                    onClick: () => valueToggle("settings_logarithmic_volume")
                                 })}
         
                             </div>

@@ -22,7 +22,7 @@ class TrayIcon extends Tray {
     const { height, width } = this.mainWindow.getBounds();
 
     if (this.mainWindow.isVisible()) {
-      this.mainWindow.hide();
+      // this.mainWindow.hide();
     } else {
       const yPosition = process.platform === 'darwin' ? y : y - height;
       this.mainWindow.setBounds({

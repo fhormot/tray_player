@@ -10,6 +10,7 @@ const Playback = (player_ref) => {
             {
                 (context) => {
                     const { 
+                        valueToggle,
                         playback_playing,
                         playback_repeat,
                         playback_volume,
@@ -17,17 +18,12 @@ const Playback = (player_ref) => {
                         playback_duration,
                         playback_progress,
                         playback_mute,
-                        playbackToggle, 
-                        playbackRepeatToggle, 
-                        playbackMuteToggle,
                         playNext,
                         volumeAdjust,
                         settings_logarithmic_volume,
                         playback_current,
                         playlist_loop,
-                        playlistLoopToggle,
                         playback_shuffle,
-                        playbackShuffleToggle
                     } = context;
                     
                     return (
@@ -74,7 +70,7 @@ const Playback = (player_ref) => {
                                         icon: "repeat",
                                         size: "small",
                                         active: playback_repeat,
-                                        onClick: playbackRepeatToggle
+                                        onClick: () => valueToggle("playback_repeat")
                                     })}
                                 </div>
                                 <div className="col s4 center-align">
@@ -82,7 +78,7 @@ const Playback = (player_ref) => {
                                         icon: "loop",
                                         size: "small",
                                         active: playlist_loop,
-                                        onClick: playlistLoopToggle
+                                        onClick: () => valueToggle("playlist_loop")
                                     })}
                                 </div>
                                 <div className="col s4 left-align">
@@ -90,7 +86,7 @@ const Playback = (player_ref) => {
                                         icon: "shuffle",
                                         size: "small",
                                         active: playback_shuffle,
-                                        onClick: playbackShuffleToggle
+                                        onClick: () => valueToggle("playback_shuffle")
                                     })}
                                 </div>
                             </div>
@@ -116,7 +112,7 @@ const Playback = (player_ref) => {
                                         icon: (playback_playing) ? "pause" : "play_arrow",
                                         size: "large",
                                         active: true,
-                                        onClick: playbackToggle
+                                        onClick: () => valueToggle("playback_playing")
                                     })}
                                 </div>
                                 <div className="col s4 left-align" style={{alignSelf: "center"}}>
@@ -159,7 +155,7 @@ const Playback = (player_ref) => {
                                         icon: (playback_mute) ? "volume_off" : "volume_up",
                                         size: "small",
                                         active: !playback_mute,
-                                        onClick: playbackMuteToggle
+                                        onClick:  () => valueToggle("playback_mute")
                                     })}
                                 </div>
                             </div>

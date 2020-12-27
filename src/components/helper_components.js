@@ -56,34 +56,33 @@ export function videoCard(info, playlistAdd, onPlayClick, onAddClick) {
                     <div className="card" style={{margin: "0"}}>
                         <div className="row" style={{margin: "0"}}>
                             <div className="card-image col s4" style={{padding: "0"}}>
-                                    <img src={thumbnail} />
+                                <img src={thumbnail} />
                             </div>
                             <div className="card-content col s8" style={{padding: "3px"}}>
-                                    <div className="col s12">
-                                        <p className="truncate">{title}</p> 
-                                        <br /> {/* Required line break for double halfway FAB buttons to function */}
-                                    </div>
+                                <div className="col s12">
+                                    <p className="truncate">{title}</p> 
+                                    <br /> {/* Required line break for double halfway FAB buttons to function */}
+                                </div>
 
-                                    <div className="card-image col s6" style={{margin: "0"}}/>
-                                    <div className="card-image col s3" style={{margin: "0"}}>
-                                        {buttonHelper({
-                                            icon: (playlistAdd) ? "add" : "remove",
-                                            size: "small",
-                                            active: true,
-                                            xtraStyles: "halfway-fab",
-                                            onClick: onAddClick
-                                        })}
-                                    </div>
-                                    <div className="card-image col s3" style={{margin: "0"}}>
-                                        {buttonHelper({
-                                            icon: "play_arrow",
-                                            size: "small",
-                                            active: true,
-                                            xtraStyles: "halfway-fab",
-                                            onClick: onPlayClick
-                                        })}
-                                    </div>
-
+                                <div className="card-image col s6" style={{margin: "0"}} />
+                                <div className="card-image col s3" style={{margin: "0"}}>
+                                    {buttonHelper({
+                                        icon: (playlistAdd) ? "add" : "remove",
+                                        size: "small",
+                                        active: true,
+                                        xtraStyles: "halfway-fab",
+                                        onClick: onAddClick
+                                    })}
+                                </div>
+                                <div className="card-image col s3" style={{margin: "0"}}>
+                                    {buttonHelper({
+                                        icon: "play_arrow",
+                                        size: "small",
+                                        active: true,
+                                        xtraStyles: "halfway-fab",
+                                        onClick: onPlayClick
+                                    })}
+                                </div>
                             </div>
                         </div>                            
                     </div>
@@ -95,17 +94,24 @@ export function videoCard(info, playlistAdd, onPlayClick, onAddClick) {
 
 export function settingsItem(config) {
     return (
-        <div className="row" style={{display: "flex"}}>
+        <div className="row" style={{display: "flex", marginBottom: "0"}}>
             <div className="col s8 left-align">
                 <p>
                     {config.title}
                 </p>
             </div>
-            <div className="switch col s4 center-align" style={{alignSelf: "center"}}>
+            <div 
+                className="switch col s4 center-align" 
+                style={{alignSelf: "center"}}
+            >
                 <label>
                     {""}
-                    <input type="checkbox" checked={config.active} onClick={config.onClick} />
-                    <span className="lever"></span>
+                    <input 
+                        type="checkbox" 
+                        checked={config.active} 
+                        onClick={config.onClick} 
+                    />
+                    <span className="lever" />
                     {""}
                 </label>
             </div>
