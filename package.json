@@ -46,7 +46,7 @@
     "yt-search": "^2.5.1"
   },
   "build": {
-    "appId": "com.karmadust.electrate",
+    "appId": "com.fhormot.trayplayer",
     "files": [
       "app/**/*",
       "node_modules/**/*",
