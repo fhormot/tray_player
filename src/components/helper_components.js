@@ -55,21 +55,29 @@ export function videoCard(info, playlistAdd, onPlayClick, onAddClick) {
                 <div className="row" style={{margin: "0", marginBottom: "5px"}}>
                     <div className="card" style={{margin: "0"}}>
                         <div className="row" style={{margin: "0"}}>
-                            <div className="card-image col s4 cardImg" style={{padding: "0", backgroundColor: 'black'}}>
-                                <div className="hoverCtrl">
-                                    <a onClick={onPlayClick}>
-                                        <img src={thumbnail} style={{alignSelf: 'center'}} />
-                                    </a>
-                                </div>
-                                <div className="hoverHide">
-                                        <a style={{color: 'white'}} onClick={onPlayClick}>
-                                            <i className="medium material-icons center-align"
-                                                style={{margin: "0", padding: "0"}}
-                                            >
-                                                play_arrow
-                                            </i>
+                            <div className="card-image col s4 cardImg" style={{padding: "0"}}>
+                                {/* <div className="cardImgWrapper"> */}
+                                    <div className="hoverCtrl" style={{alignSelf: 'center'}}>
+                                        <a onClick={onPlayClick}>
+                                            <img
+                                                src={thumbnail} 
+                                                style={{alignSelf: 'center'}}
+                                                onLoad={(event) => {
+                                                    console.log(event.target.clientWidth);
+                                                }}
+                                                />
                                         </a>
-                                </div>
+                                    </div>
+                                {/* </div> */}
+                                    <div className="hoverHide">
+                                            <a style={{color: 'white'}} onClick={onPlayClick}>
+                                                <i className="medium material-icons center-align iconImg"
+                                                    style={{margin: "0", padding: "0", }}
+                                                    >
+                                                    play_arrow
+                                                </i>
+                                            </a>
+                                    </div>
                             </div>
                             <div className="card-content col s8" style={{padding: "3px"}}>
                                     <p className="truncate">{title}</p> 

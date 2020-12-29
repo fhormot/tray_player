@@ -22,9 +22,19 @@
 }
 
 .cardImg {
-    height: auto !important;
-    position: absolute;
+    height: 62px !important;
+    width: 83px !important;
+    background-color: black;
+    /* border: 1px solid red; */
     display: flex;
+}
+
+.iconImg {
+    height: 62px !important;
+    width: 84px !important;
+    /* width: auto; */
+    height: fit-content;
+    background: rgba(0, 0, 0, 0.73);
 }
 
 .hoverHide {
@@ -37,6 +47,16 @@
     cursor: pointer;
     /* border: 1px solid red; */
 }
+
+/* .cardImgWrapper {
+    height: 62px !important;
+    width: 83px !important;
+    display: flex;
+} */
+/* 
+.cardImgWrapper:hover {
+    opacity: 50%;
+} */
 
 .hoverCtrl:hover + .hoverHide, .hoverHide:hover {
     display: block;
