@@ -24,7 +24,7 @@ class App extends React.Component {
             <Fragment>
                 <Router>
                     <main>
-                        <nav className="grey darken-2">
+                        <nav className="grey darken-2 topBar">
                             <ul>
                                 <li className="left">
                                     <Link to="/">

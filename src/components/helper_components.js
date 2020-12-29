@@ -49,39 +49,38 @@ export function videoCard(info, playlistAdd, onPlayClick, onAddClick) {
         const title = info.title || "";
         const duration = (info.duration) ? info.duration.timestamp : "";
         const type = info.type;
-        
+
         return (
             <Fragment key={videoId}>
-                <div className="row">
+                <div className="row" style={{margin: "0", marginBottom: "5px"}}>
                     <div className="card" style={{margin: "0"}}>
                         <div className="row" style={{margin: "0"}}>
-                            <div className="card-image col s4" style={{padding: "0"}}>
-                                <img src={thumbnail} />
+                            <div className="card-image col s4 cardImg" style={{padding: "0", backgroundColor: 'black'}}>
+                                <div className="hoverCtrl">
+                                    <a onClick={onPlayClick}>
+                                        <img src={thumbnail} style={{alignSelf: 'center'}} />
+                                    </a>
+                                </div>
+                                <div className="hoverHide">
+                                        <a style={{color: 'white'}} onClick={onPlayClick}>
+                                            <i className="medium material-icons center-align"
+                                                style={{margin: "0", padding: "0"}}
+                                            >
+                                                play_arrow
+                                            </i>
+                                        </a>
+                                </div>
                             </div>
                             <div className="card-content col s8" style={{padding: "3px"}}>
-                                <div className="col s12">
                                     <p className="truncate">{title}</p> 
-                                    <br /> {/* Required line break for double halfway FAB buttons to function */}
-                                </div>
 
-                                <div className="card-image col s6" style={{margin: "0"}} />
-                                <div className="card-image col s3" style={{margin: "0"}}>
-                                    {buttonHelper({
-                                        icon: (playlistAdd) ? "add" : "remove",
-                                        size: "small",
-                                        active: true,
-                                        xtraStyles: "halfway-fab",
-                                        onClick: onAddClick
-                                    })}
-                                </div>
-                                <div className="card-image col s3" style={{margin: "0"}}>
-                                    {buttonHelper({
-                                        icon: "play_arrow",
-                                        size: "small",
-                                        active: true,
-                                        xtraStyles: "halfway-fab",
-                                        onClick: onPlayClick
-                                    })}
+                                <div className="card-action" style={{padding: "3px", margin: "0"}}>
+                                    <a 
+                                        onClick={onAddClick} 
+                                        style={{padding: "3px", margin: "0"}}
+                                    >
+                                        {(playlistAdd) ? "Add" : "Remove"}
+                                    </a>
                                 </div>
                             </div>
                         </div>                            

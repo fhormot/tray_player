@@ -35,7 +35,7 @@ const Search = () => {
                                                         queryGetResults();
                                                     }
                                                 }}
-                                                />
+                                            />
                                         </div>
                                         <div className="col s4 center-align" style={{alignSelf: "center"}}>
                                             {buttonHelper({

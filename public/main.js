@@ -38,7 +38,7 @@ const createWindow = () => {
   globalShortcut.register('CommandOrControl+Shift+F12', () => mainWindow.webContents.send('control:mute'));
 
   // TODO: Add process.env to control this feature
-  // globalShortcut.register('CommandOrControl+Shift+R', () => mainWindow.loadURL(urlPath));
+  globalShortcut.register('CommandOrControl+Shift+R', () => mainWindow.loadURL(urlPath));
 
   mainWindow.on('closed', () => {
     globalShortcut.unregisterAll();

@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import { ipcRenderer } from 'electron';
+import { Redirect } from "react-router";
 
 const PlayerContext = React.createContext()
 
@@ -49,6 +50,7 @@ class MyContext extends Component {
     this.startSearchPlaylist.bind(this);
     this.playlistExists.bind(this);
     this.shufflePlaylist.bind(this);
+    this.startShufflePlaylist.bind(this);
   }
 
   componentDidMount() {
@@ -78,14 +80,7 @@ class MyContext extends Component {
     }, () => {
       // Check if it is required to start playing
       if(this.state.settings_play_on_start){
-        const pl_len = this.state.playlist.length;
-  
-        let idx = (this.state.playback_shuffle) 
-          ? Math.floor((pl_len - 1) * Math.random()) // Random index
-          : 0;
-  
-        // Restart playlist with a new shuffle
-        this.startPlaylist(this.state.playlist[idx].url);
+        this.startShufflePlaylist() ;
       }
     });
 
@@ -142,7 +137,6 @@ class MyContext extends Component {
     if(!pl_len) {
       return;
     }
-
 
     // Check if moving forwards or backwards
     let idx = (forward) 
@@ -212,6 +206,17 @@ class MyContext extends Component {
     }, () => {
       this.playNext();
     });
+  }
+
+  startShufflePlaylist = () => {
+    const pl_len = this.state.playlist.length;
+  
+    let idx = (this.state.playback_shuffle) 
+      ? Math.floor((pl_len - 1) * Math.random()) // Random index
+      : 0;
+
+    // Restart playlist with a new shuffle
+    this.startPlaylist(this.state.playlist[idx].url);
   }
 
   startSearchPlaylist = (item) => {
@@ -310,6 +315,7 @@ class MyContext extends Component {
           playNext: this.playNext,
           startSearchPlaylist: this.startSearchPlaylist,
           playlistExists: this.playlistExists,
+          startShufflePlaylist: this.startShufflePlaylist
         }}
       >
         {this.props.children}

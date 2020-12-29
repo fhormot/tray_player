@@ -5,20 +5,41 @@
     /* border: 1px solid blue; */
 }
 
-/* body {
-    overflow: hidden;
-} */
-
 .scrollHide {
     overflow-y: scroll;
     /* border: 1px solid red; */
 }
 
-/* 
-    Needs to be improved as it scrolls the whole page
-    -> Currently scrolls the whole page
-    -> TODO: Scroll the element
-*/
 ::-webkit-scrollbar {
     display: none;
+}
+
+.topBar {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.cardImg {
+    height: auto !important;
+    position: absolute;
+    display: flex;
+}
+
+.hoverHide {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    cursor: pointer;
+    /* border: 1px solid red; */
+}
+
+.hoverCtrl:hover + .hoverHide, .hoverHide:hover {
+    display: block;
+    color: white;
+    /* backface-visibility: hidden; */
 }
