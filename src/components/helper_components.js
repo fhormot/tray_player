@@ -52,46 +52,36 @@ export function videoCard(info, playlistAdd, onPlayClick, onAddClick) {
 
         return (
             <Fragment key={videoId}>
-                <div className="row" style={{margin: "0", marginBottom: "5px"}}>
-                    <div className="card" style={{margin: "0"}}>
-                        <div className="row" style={{margin: "0"}}>
-                            <div className="card-image col s4 cardImg" style={{padding: "0"}}>
-                                {/* <div className="cardImgWrapper"> */}
-                                    <div className="hoverCtrl" style={{alignSelf: 'center'}}>
-                                        <a onClick={onPlayClick}>
-                                            <img
-                                                src={thumbnail} 
-                                                style={{alignSelf: 'center'}}
-                                                onLoad={(event) => {
-                                                    console.log(event.target.clientWidth);
-                                                }}
-                                                />
-                                        </a>
-                                    </div>
-                                {/* </div> */}
-                                    <div className="hoverHide">
-                                            <a style={{color: 'white'}} onClick={onPlayClick}>
-                                                <i className="medium material-icons center-align iconImg"
-                                                    style={{margin: "0", padding: "0", }}
-                                                    >
-                                                    play_arrow
-                                                </i>
-                                            </a>
-                                    </div>
+                <div className="row margin-B5px z-depth-1">
+                    <div className="card margin-0">
+                        <div className="card-image col s4 cardImg padding-0">
+                            <div className="hoverCtrl selfCenter">
+                                <a onClick={onPlayClick}>
+                                    <img src={thumbnail} className="selfCenter"/>
+                                </a>
                             </div>
-                            <div className="card-content col s8" style={{padding: "3px"}}>
-                                    <p className="truncate">{title}</p> 
-
-                                <div className="card-action" style={{padding: "3px", margin: "0"}}>
-                                    <a 
-                                        onClick={onAddClick} 
-                                        style={{padding: "3px", margin: "0"}}
-                                    >
-                                        {(playlistAdd) ? "Add" : "Remove"}
+                            <div className="hoverHide">
+                                    <a style={{color: 'white'}} onClick={onPlayClick}>
+                                        <i className="medium material-icons center-align iconImg margin-0 padding-0">
+                                            play_arrow
+                                        </i>
                                     </a>
-                                </div>
                             </div>
-                        </div>                            
+                        </div>
+
+                        <div className="card-content col s8 padding-A5px">
+                                <p className="truncate">{title}</p> 
+
+                            <div className="card-action center-align margin-0 padding-T5px" 
+                                    style={{display: 'flex'}}>
+                                <a 
+                                    onClick={onAddClick} 
+                                    className="margin-0 padding-0 selfCenter"
+                                >
+                                    {(playlistAdd) ? "Add" : "Remove"}
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </Fragment>

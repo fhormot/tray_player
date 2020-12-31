@@ -7,7 +7,7 @@ const Search = () => {
     return (
         <PlayerConsumer>
             {
-                (value) => {
+                (contextStore) => {
                     const {
                         contextSet,
                         search_results,
@@ -15,47 +15,50 @@ const Search = () => {
                         playNext, 
                         playlistAppend, 
                         playlistExists
-                    } = value;
+                    } = contextStore;
 
                     return (
                         <Fragment>
-                            {/* <div className="row"> */}
-                                {/* <div className="col s12"> */}
-                                    <div className="row" style={{display: "flex"}}>
-                                        <div className="input-field col s8">
-                                            <input 
-                                                autoFocus
-                                                placeholder="Search" 
-                                                type="text" 
-                                                className="validate" 
-                                                name="search_query"
-                                                onChange={(e) => contextSet(e.target)}
-                                                onKeyPress={(e) => {
-                                                    if(e.key === 'Enter'){
-                                                        queryGetResults();
-                                                    }
-                                                }}
-                                            />
-                                        </div>
-                                        <div className="col s4 center-align" style={{alignSelf: "center"}}>
-                                            {buttonHelper({
-                                                icon: "search",
-                                                size: "small",
-                                                active: true,
-                                                onClick: queryGetResults
-                                            })}
-                                        </div>
-                                    </div>
-                                {/* </div> */}
-                            {/* </div> */}
+                            <div className="row z-depth-1" style={{display: "flex", margin: "0", marginBottom: "5px"}}>
+                                <div className="input-field col s8" style={{margin: "0"}}>
+                                    <input 
+                                        autoFocus
+                                        placeholder="Search" 
+                                        type="text" 
+                                        className="validate" 
+                                        name="search_query"
+                                        onChange={(e) => contextSet(e.target)}
+                                        onKeyPress={(e) => {
+                                            if(e.key === 'Enter'){
+                                                queryGetResults();
+                                            }
+                                        }}
+                                    />
+                                </div>
 
-                            {search_results.map(item => {
-                                if (!playlistExists(item)){
-                                    return videoCard(item, true, () => playNext(item),  () => playlistAppend(item));
-                                } else {
-                                    return videoCard(item, false, () => playNext(item),  () => playlistRemove(item));
-                                }
-                            })}
+                                <div className="col s4 center-align" style={{alignSelf: "center"}}>
+                                    {buttonHelper({
+                                        icon: "search",
+                                        size: "small",
+                                        active: true,
+                                        onClick: queryGetResults
+                                    })}
+                                </div>
+                            </div>
+
+                            { 
+                                (search_results.length)
+                                    ? search_results.map(item => {
+                                        if (!playlistExists(item)){
+                                            return videoCard(item, true, () => playNext(item),  () => playlistAppend(item));
+                                        } else {
+                                            return videoCard(item, false, () => playNext(item),  () => playlistRemove(item));
+                                        }
+                                    })
+                                    : <h6 className="noCardText">
+                                        Type your search query into the search bar.
+                                      </h6> 
+                            }
                         </Fragment>
                     );
                 }

@@ -1,6 +1,6 @@
 {
   "name": "tray_player",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A YT tray pop-up player using Electron",
   "main": "app/main.js",
   "scripts": {

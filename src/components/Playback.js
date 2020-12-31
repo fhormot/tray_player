@@ -8,7 +8,7 @@ const Playback = (player_ref) => {
     return (
         <PlayerConsumer>
             {
-                (context) => {
+                (contextStore) => {
                     const { 
                         valueToggle,
                         playback_playing,
@@ -24,7 +24,7 @@ const Playback = (player_ref) => {
                         playback_current,
                         playlist_loop,
                         playback_shuffle,
-                    } = context;
+                    } = contextStore;
                     
                     return (
                         <Fragment>

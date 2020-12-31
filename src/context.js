@@ -179,13 +179,14 @@ class MyContext extends Component {
   }
 
   startPlaylist = (url) => {
+    // console.log(this.state.playlist);
     let playlist = this.state.playlist;
-
+    
     // Shuffle the playlist if necessary
     if(this.state.playback_shuffle){
       this.shufflePlaylist(playlist);
     }
-
+    
     // Find index by url
     let idx = 0;
     for (let item of playlist){
@@ -195,16 +196,17 @@ class MyContext extends Component {
         idx++;
       }
     }
-
+    
     // Rotate playlist depending on the song that is played
     playlist = playlist.slice(idx).concat(playlist.slice(0, idx));
-
+    
     this.setState({
       playlist_index: 0,
       playback_playlist: playlist,
       play_from_playlist: true
     }, () => {
       this.playNext();
+      // console.log(this.state.playlist);
     });
   }
 

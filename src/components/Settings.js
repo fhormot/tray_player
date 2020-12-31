@@ -7,12 +7,12 @@ const Settings = () => {
     return (
         <PlayerConsumer>
             {
-                (context) => {
+                (contextStore) => {
                     const {
                         settings_logarithmic_volume,
                         settings_play_on_start,
                         valueToggle
-                    } = context;
+                    } = contextStore;
 
                     return (
                         <Fragment>

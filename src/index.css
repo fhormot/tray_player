@@ -1,17 +1,47 @@
-.row{
-    /* padding-top: 0 !important; */
-    /* margin-bottom: 5px !important; */
-    /* margin: 0 !important; */
-    /* border: 1px solid blue; */
+/* Generalized */
+
+.margin-0 {
+    margin: 0 !important;
+}
+
+.margin-B5px {
+    margin: 0 !important;
+    margin-bottom: 5px !important;
+}
+
+.padding-0, 
+.padding-T5px, 
+.padding-B5px, 
+.padding-L5px, 
+.padding-R5px {
+    padding: 0 !important;
+}
+
+.padding-A5px {
+    padding: 5px !important;
+}
+
+.padding-T5px {
+    padding-top: 5px !important;
+}
+
+.padding-B5px {
+    padding-bottom: 5px !important;
+}
+
+.selfCenter {
+    align-self: center !important;
+}
+
+/* Specific */
+
+::-webkit-scrollbar {
+    display: none;
 }
 
 .scrollHide {
     overflow-y: scroll;
     /* border: 1px solid red; */
-}
-
-::-webkit-scrollbar {
-    display: none;
 }
 
 .topBar {
@@ -27,6 +57,14 @@
     background-color: black;
     /* border: 1px solid red; */
     display: flex;
+}
+
+.noCardText {
+    /* height: 100%; */
+    /* border: 1px solid red; */
+    text-align: center;
+    color: gray;
+    vertical-align: middle;
 }
 
 .iconImg {
@@ -48,18 +86,10 @@
     /* border: 1px solid red; */
 }
 
-/* .cardImgWrapper {
-    height: 62px !important;
-    width: 83px !important;
-    display: flex;
-} */
-/* 
-.cardImgWrapper:hover {
-    opacity: 50%;
-} */
-
 .hoverCtrl:hover + .hoverHide, .hoverHide:hover {
     display: block;
     color: white;
     /* backface-visibility: hidden; */
 }
+
+/* Not sorted */

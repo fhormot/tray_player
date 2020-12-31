@@ -7,17 +7,17 @@ const Playlist = () => {
     return (
         <PlayerConsumer>
             {
-                (value) => {
+                (contextStore) => {
                     const {
                         playlist,
                         startPlaylist, 
                         playlistRemove,
                         startShufflePlaylist
-                    } = value;
+                    } = contextStore;
 
                     return (
                         <Fragment>
-                            <div className="card panel z-depth-2" style={{margin: "0", marginBottom: "5px", padding: "0"}}>
+                            <div className="card panel z-depth-1" style={{margin: "0", marginBottom: "5px", padding: "0"}}>
                                 <div className="card-action" style={{margin: "0", padding: "10px"}}>
                                     <a onClick={startShufflePlaylist} className="center-align" style={{margin: "0", padding: "0"}}>
                                         <p className="center-align" style={{margin: "0", padding: "0"}}> 
@@ -31,12 +31,16 @@ const Playlist = () => {
 
                             <div className="scrollHide">
                                 {
-                                    playlist.map(item => videoCard(
+                                    (playlist.length)
+                                    ? playlist.map(item => videoCard(
                                         item, 
                                         false, 
                                         () => startPlaylist(item.url),  
                                         () => playlistRemove(item)
-                                        ))
+                                    ))
+                                    : <h6 className="noCardText">
+                                        The playlist is empty.
+                                      </h6> 
                                 }
                             </div>
                         </Fragment>
