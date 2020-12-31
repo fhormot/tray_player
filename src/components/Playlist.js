@@ -15,6 +15,8 @@ const Playlist = () => {
                         startShufflePlaylist
                     } = contextStore;
 
+                    // console.log(playlist);
+
                     return (
                         <Fragment>
                             <div className="card panel z-depth-1" style={{margin: "0", marginBottom: "5px", padding: "0"}}>

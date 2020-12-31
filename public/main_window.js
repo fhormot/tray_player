@@ -20,6 +20,8 @@ class MainWindown extends BrowserWindow {
             show: false
         });
 
+        this.setVisibleOnAllWorkspaces(true);
+
         this.on('blur', this.onBlur.bind(this));
 
         this.loadURL(url);
